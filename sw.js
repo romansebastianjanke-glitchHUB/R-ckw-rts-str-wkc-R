@@ -1,5 +1,5 @@
 // Einfacher Offline-Cache: App-Dateien zuerst aus dem Cache, im Hintergrund aktualisieren.
-const CACHE = 'rueckwaerts-v1';
+const CACHE = 'rueckwaerts-v2';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {

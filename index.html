@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  /* RSJ-Design – Tokens */
+  /* RSJ-Design – Tokens. Ausnahme: --rec (Rot) nur für Aufnahme. */
   :root {
     --bg: #1C2B33;
     --card: #263A45;
@@ -33,6 +33,9 @@
     --soft-bg: #FFF2B2;
     --soft-text: #1C2B33;
     --soft-border: #FFF2B2;
+    --rec: #D92D3A;
+    --on-rec: #FFFFFF;
+    --line: 2px;
     color-scheme: dark;
   }
   @media (prefers-color-scheme: light) {
@@ -53,9 +56,10 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; height: 100%; }
   body {
     margin: 0;
+    min-height: 100%;
     background: var(--bg);
     color: var(--text);
     font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -64,183 +68,219 @@
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
   }
+  p { margin: 0; }
+
+  /* Ganze App passt in den Bildschirm */
   .app {
-    max-width: 560px;
-    margin: 0 auto;
-    padding: max(32px, env(safe-area-inset-top)) 16px max(48px, env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; gap: 16px;
+    max-width: 560px; margin: 0 auto;
+    min-height: 100vh; min-height: 100dvh;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
   }
 
   /* Typografie */
   .eyebrow {
-    margin: 0 0 8px;
+    margin: 0 0 4px;
     font-family: "Montserrat", sans-serif;
     font-size: 12px; line-height: 16px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.14em;
     color: var(--muted);
   }
   .eyebrow.accent { color: var(--link); }
-  .display {
-    margin: 0 0 16px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 800;
-    font-size: clamp(40px, 12vw, 56px);
-    line-height: 1.07;
-    letter-spacing: -0.01em;
-  }
   .h3 {
-    margin: 0 0 8px;
+    margin: 0;
     font-family: "Montserrat", sans-serif;
     font-size: 20px; line-height: 28px; font-weight: 700;
   }
-  .lead { margin: 0; font-size: 18px; line-height: 28px; color: var(--muted); }
   .muted { color: var(--muted); }
-  .caption { font-size: 13px; line-height: 18px; color: var(--muted); }
-  p { margin: 0; }
 
-  .hero { margin-bottom: 32px; }
+  /* Kopfzeile */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .title {
+    margin: 0;
+    font-family: "Montserrat", sans-serif; font-weight: 800;
+    font-size: 32px; line-height: 40px; letter-spacing: -0.01em;
+  }
+  .icon-btn {
+    display: inline-grid; place-items: center; flex: none;
+    width: 44px; height: 44px; padding: 0;
+    background: transparent; color: var(--text);
+    border: var(--line) solid var(--border); border-radius: 12px;
+    font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 18px;
+    cursor: pointer;
+  }
 
   /* Schritt-Navigation */
-  .steps {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
-    margin-bottom: 16px;
-  }
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .step-tab {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     min-height: 44px; padding: 8px;
     background: transparent; color: var(--muted);
-    border: 1px solid var(--border); border-radius: 8px;
+    border: var(--line) solid var(--border); border-radius: 8px;
     font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 13px; line-height: 16px;
     cursor: pointer;
   }
+  .step-tab .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .step-tab .num {
-    display: inline-grid; place-items: center;
+    display: inline-grid; place-items: center; flex: none;
     width: 22px; height: 22px; border-radius: 8px;
-    border: 1px solid currentColor; font-size: 12px; flex: none;
+    border: var(--line) solid currentColor; font-size: 12px;
   }
   .step-tab[aria-selected="true"] { color: var(--text); border-color: var(--link); background: var(--card); }
   .step-tab[aria-selected="true"] .num { color: var(--link); }
   .step-tab:disabled { opacity: 0.45; cursor: not-allowed; }
   .step-tab.done .num { background: var(--link); color: var(--bg); border-color: var(--link); }
-  .step-tab .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  @media (max-width: 520px) {
-    .step-tab { flex-direction: column; gap: 4px; min-height: 64px; font-size: 12px; }
+  @media (max-width: 440px) {
+    .step-tab { flex-direction: column; gap: 4px; min-height: 52px; padding: 6px 4px; font-size: 12px; }
   }
 
-  /* Karte */
-  .card {
-    background: var(--card);
-    border: 1px solid transparent;
-    border-radius: 20px;
-    padding: 32px;
-  }
-  @media (max-width: 400px) { .card { padding: 24px; } }
+  /* Karte = aktueller Schritt, füllt den Rest */
+  .card { background: var(--card); border-radius: 20px; padding: 24px; }
   @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) .card { border-color: var(--card); }
+    :root:not([data-theme="dark"]) .card { border: var(--line) solid var(--card); }
   }
+  .panel { flex: 1; display: flex; flex-direction: column; gap: 16px; min-height: 0; }
   .panel[hidden] { display: none; }
-  .panel > .body { margin-bottom: 24px; }
+  .panel-head .body { margin-top: 4px; }
 
-  /* Wellenform */
+  /* Wellenform / Pegel */
   .wave {
     position: relative;
-    height: 112px;
-    margin-bottom: 24px;
-    border: 1px solid var(--border);
+    flex: 1 1 auto;
+    min-height: 96px;
+    border: var(--line) solid var(--border);
     border-radius: 12px;
-    overflow: hidden;
+    transition: border-color 0.15s ease;
+    transform-origin: center;
   }
-  .wave canvas { display: block; width: 100%; height: 100%; }
+  .wave canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border-radius: 10px; }
   .wave-empty, .wave-label {
-    position: absolute; font-size: 13px; line-height: 18px; color: var(--muted); pointer-events: none;
+    position: absolute; pointer-events: none; color: var(--muted);
   }
-  .wave-empty { inset: 0; display: grid; place-items: center; }
+  .wave-empty { inset: 0; display: grid; place-items: center; font-size: 13px; line-height: 18px; padding-top: 20px; }
   .wave-empty[hidden] { display: none; }
   .wave-label {
-    top: 8px; left: 8px;
-    font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px;
+    top: 10px; left: 12px;
+    display: flex; align-items: center; gap: 8px;
+    font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 12px; line-height: 16px;
     text-transform: uppercase; letter-spacing: 0.14em;
   }
+  .wave.is-live {
+    border-color: var(--rec);
+    border-width: 3px;
+    transform: scale(calc(1 + var(--lvl, 0) * 0.05));
+    animation: pop 0.35s cubic-bezier(.2, 1.6, .4, 1);
+  }
+  .wave.is-live .wave-label { color: var(--text); }
+  .live-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rec); animation: pulse 1s ease-in-out infinite; }
+  @keyframes pop { 0% { transform: scale(0.94); } 60% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  @keyframes pulse { 50% { opacity: 0.3; } }
 
   /* Buttons */
-  .actions { display: grid; gap: 16px; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .row[hidden], .btn[hidden], .speed[hidden] { display: none; }
+  .actions { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+  @media (min-height: 1000px) { .wave { max-height: 420px; } }
+  .row { display: flex; gap: 12px; }
+  .row > .btn { flex: 1 1 0; min-width: 0; padding-left: 10px; padding-right: 10px; gap: 6px; }
+  .row > .btn.fit { flex: 0 0 auto; width: auto; }
+  .row[hidden], .btn[hidden] { display: none; }
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    min-height: 52px; padding: 16px 24px; width: 100%;
-    border-radius: 12px; border: 1px solid transparent;
+    min-height: 52px; padding: 12px 16px; width: 100%;
+    border-radius: 12px; border: var(--line) solid transparent;
     font-family: "Montserrat", sans-serif; font-size: 16px; line-height: 20px; font-weight: 700;
     cursor: pointer; user-select: none; -webkit-user-select: none;
-    touch-action: manipulation;
+    touch-action: manipulation; white-space: nowrap;
     transition: transform 0.08s ease, background-color 0.15s ease;
   }
-  .row .btn { padding: 16px 12px; }
-  .btn:active { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn svg { width: 20px; height: 20px; flex: none; }
+  .btn .label { overflow: hidden; text-overflow: ellipsis; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn svg { width: 22px; height: 22px; flex: none; }
   .btn-primary { background: var(--accent); color: var(--on-accent); }
   .btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
   .btn-soft { background: var(--soft-bg); color: var(--soft-text); border-color: var(--soft-border); }
+  .btn-rec { background: var(--rec); color: var(--on-rec); }
   .btn-lg { min-height: 64px; font-size: 18px; }
-  .btn:focus-visible, .step-tab:focus-visible, .chip:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  .btn-outline .ic-rec { color: var(--rec); }
+  .btn.is-recording { background: var(--rec); color: var(--on-rec); border-color: var(--rec); min-height: 64px; font-size: 18px; }
+  .rec-dot { width: 14px; height: 14px; border-radius: 3px; background: currentColor; flex: none; animation: pulse 1s ease-in-out infinite; }
+  .timer { font-variant-numeric: tabular-nums; opacity: 0.85; }
+  .btn[aria-pressed="true"] { border-color: var(--link); color: var(--text); }
+  .btn[aria-pressed="true"] .chk { display: inline; }
+  .chk { display: none; }
+  .btn:focus-visible, .step-tab:focus-visible, .icon-btn:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
 
-  .btn.is-recording { background: transparent; color: var(--text); border-color: var(--link); }
-  .rec-dot {
-    width: 12px; height: 12px; border-radius: 50%; background: var(--link); flex: none;
-    animation: pulse 1s ease-in-out infinite;
+  /* Niedrige Bildschirme: verdichten */
+  @media (max-height: 760px) {
+    .app { gap: 12px; }
+    .card { padding: 20px; }
+    .panel { gap: 12px; }
+    .title { font-size: 28px; line-height: 36px; }
   }
-  @keyframes pulse { 50% { opacity: 0.25; } }
-  .timer { font-variant-numeric: tabular-nums; }
-
-  /* Tempo-Auswahl */
-  .speed { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .speed .caption { margin-right: 8px; }
-  .chip {
-    min-height: 36px; padding: 8px 16px;
-    background: transparent; color: var(--muted);
-    border: 1px solid var(--border); border-radius: 8px;
-    font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 13px; line-height: 16px;
-    cursor: pointer;
+  @media (max-height: 640px) {
+    .panel-head .body { display: none; }
+    .btn { min-height: 48px; }
+    .btn-lg, .btn.is-recording { min-height: 56px; }
+    .wave { min-height: 84px; }
+    .step-tab { min-height: 44px; }
   }
-  .chip[aria-pressed="true"] { color: var(--text); border-color: var(--link); }
+  @media (max-height: 640px) and (max-width: 440px) {
+    .step-tab { flex-direction: row; font-size: 12px; gap: 4px; }
+    .step-tab .num { display: none; }
+  }
 
   /* Hinweise */
-  .notice { margin-top: 16px; }
+  .notice { border: var(--line) solid var(--rec); padding: 16px; }
   .notice[hidden] { display: none; }
-  .notice .h3 { font-size: 16px; line-height: 20px; }
   .toast {
     position: fixed; left: 50%; top: max(16px, env(safe-area-inset-top));
     transform: translate(-50%, -16px);
     max-width: calc(100% - 32px); width: max-content;
-    padding: 16px 24px; border-radius: 12px;
-    background: var(--card); color: var(--text); border: 1px solid var(--border);
-    font-size: 16px; line-height: 22px;
+    padding: 12px 20px; border-radius: 12px;
+    background: var(--card); color: var(--text); border: var(--line) solid var(--border);
+    font-size: 15px; line-height: 22px; z-index: 10;
     opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s;
   }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-  .howto { margin-top: 48px; }
-  .howto ol { margin: 0; padding-left: 20px; color: var(--muted); }
-  .howto li + li { margin-top: 8px; }
-  .howto strong { color: var(--text); font-weight: 600; }
+  /* Anleitung */
+  dialog.info {
+    width: min(520px, calc(100% - 32px)); max-height: calc(100% - 32px);
+    margin: auto; padding: 24px;
+    background: var(--card); color: var(--text);
+    border: var(--line) solid var(--border); border-radius: 20px;
+  }
+  dialog.info::backdrop { background: rgba(28, 43, 51, 0.8); }
+  dialog.info ol { margin: 12px 0 16px; padding-left: 20px; color: var(--muted); }
+  dialog.info li + li { margin-top: 8px; }
+  dialog.info strong { color: var(--text); font-weight: 600; }
+  dialog.info .note { font-size: 13px; line-height: 18px; color: var(--muted); margin-bottom: 16px; }
+  .info-head { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+
+  /* Sehr schmale Geräte */
+  @media (max-width: 360px) {
+    .card { padding: 16px; }
+    .row { gap: 8px; }
+    .row > .btn { font-size: 14px; gap: 4px; padding-left: 6px; padding-right: 6px; }
+    .row > .btn svg { width: 16px; height: 16px; }
+  }
 
   @media (prefers-reduced-motion: reduce) {
-    .rec-dot { animation: none; }
+    .rec-dot, .live-dot, .wave.is-live { animation: none; }
+    .wave.is-live { transform: none; }
     .btn, .toast { transition: none; }
   }
 </style>
 </head>
 <body>
 <main class="app">
-  <header class="hero">
-    <p class="eyebrow">Sprachspiel</p>
-    <h1 class="display">Rückwärts</h1>
-    <p class="lead">Sprich ein Wort, hör es rückwärts und sprich das nach. Dann wird gedreht. Klingt es wieder vorwärts?</p>
+  <header class="top">
+    <h1 class="title">Rückwärts</h1>
+    <button class="icon-btn" id="info-btn" aria-label="So geht’s">?</button>
   </header>
 
   <div class="card notice" id="unsupported" hidden>
-    <p class="eyebrow accent">Hinweis</p>
-    <p class="h3">Mikrofon nicht verfügbar</p>
+    <p class="eyebrow">Mikrofon nicht verfügbar</p>
     <p class="muted" id="unsupported-text"></p>
   </div>
 
@@ -252,51 +292,60 @@
 
   <!-- Schritt 1 -->
   <section class="card panel" data-panel="1" role="tabpanel">
-    <p class="eyebrow accent">Schritt 1 · Original</p>
-    <h2 class="h3">Sag ein Wort oder einen kurzen Satz</h2>
-    <p class="body muted">Bis zu 8 Sekunden. Kurze, klare Wörter klappen am besten, zum Beispiel „Banane“ oder „Guten Morgen“.</p>
-    <div class="wave">
+    <div class="panel-head">
+      <p class="eyebrow accent">Schritt 1 · Original</p>
+      <h2 class="h3">Sag ein Wort</h2>
+      <p class="body muted">Oder einen kurzen Satz, bis 8 Sekunden.</p>
+    </div>
+    <div class="wave" id="box1">
       <canvas id="wave1"></canvas>
       <span class="wave-empty" id="wave1-empty">Noch keine Aufnahme</span>
       <span class="wave-label" id="wave1-label"></span>
     </div>
     <div class="actions">
-      <button class="btn btn-primary btn-lg" id="rec1" data-rec="original"></button>
       <div class="row" id="row1" hidden>
         <button class="btn btn-outline" id="play1-fwd" data-icon="play">Original</button>
         <button class="btn btn-primary" id="play1-rev" data-icon="reverse">Rückwärts</button>
       </div>
-      <button class="btn btn-soft" id="next1" data-icon="next" hidden>Weiter zu Schritt 2</button>
+      <div class="row">
+        <button class="btn btn-rec btn-lg" id="rec1" data-rec="original"></button>
+        <button class="btn btn-soft" id="next1" data-icon="next" hidden>Weiter</button>
+      </div>
     </div>
   </section>
 
   <!-- Schritt 2 -->
   <section class="card panel" data-panel="2" role="tabpanel" hidden>
-    <p class="eyebrow accent">Schritt 2 · Nachsprechen</p>
-    <h2 class="h3">Sprich das Rückwärts nach</h2>
-    <p class="body muted">Hör dir die Rückwärts-Version so oft an, wie du willst. Dann sprich sie so genau wie möglich nach. Du kannst das Handy auch weitergeben.</p>
-    <div class="wave">
+    <div class="panel-head">
+      <p class="eyebrow accent">Schritt 2 · Nachsprechen</p>
+      <h2 class="h3">Sprich das Rückwärts nach</h2>
+      <p class="body muted">Vorlage anhören, dann nachsprechen. Gern auch jemand anderes.</p>
+    </div>
+    <div class="wave" id="box2">
       <canvas id="wave2"></canvas>
       <span class="wave-label" id="wave2-label"></span>
     </div>
     <div class="actions">
-      <div class="speed" id="speed">
-        <span class="caption">Tempo Vorlage</span>
-        <button class="chip" data-rate="1" aria-pressed="true">Normal</button>
-        <button class="chip" data-rate="0.75" aria-pressed="false">Langsam</button>
+      <div class="row">
+        <button class="btn btn-outline" id="play2-ref" data-icon="reverse">Vorlage</button>
+        <button class="btn btn-outline fit" id="slow" aria-pressed="false" aria-label="Vorlage langsamer abspielen">Langsam</button>
       </div>
-      <button class="btn btn-outline" id="play2-ref" data-icon="reverse">Vorlage anhören</button>
-      <button class="btn btn-primary btn-lg" id="rec2" data-rec="imitation"></button>
-      <button class="btn btn-outline" id="play2-imit" data-icon="play" hidden>Meine Aufnahme</button>
+      <div class="row">
+        <button class="btn btn-rec btn-lg" id="rec2" data-rec="imitation"></button>
+        <button class="btn btn-outline" id="play2-imit" data-icon="play" hidden>Meine</button>
+      </div>
+      <button class="btn btn-primary btn-lg" id="next2" data-icon="next" hidden>Ergebnis anhören</button>
     </div>
   </section>
 
   <!-- Schritt 3 -->
   <section class="card panel" data-panel="3" role="tabpanel" hidden>
-    <p class="eyebrow accent">Schritt 3 · Ergebnis</p>
-    <h2 class="h3">Deine Aufnahme, umgedreht</h2>
-    <p class="body muted">Jetzt wird dein Nachsprechen rückwärts abgespielt. Wenn du gut warst, hörst du wieder das Original.</p>
-    <div class="wave">
+    <div class="panel-head">
+      <p class="eyebrow accent">Schritt 3 · Ergebnis</p>
+      <h2 class="h3">Dein Nachsprechen, umgedreht</h2>
+      <p class="body muted">Klingt es wie das Original?</p>
+    </div>
+    <div class="wave" id="box3">
       <canvas id="wave3"></canvas>
       <span class="wave-label" id="wave3-label"></span>
     </div>
@@ -309,18 +358,25 @@
       <button class="btn btn-soft" id="reset" data-icon="restart">Neue Runde</button>
     </div>
   </section>
-
-  <section class="howto">
-    <p class="eyebrow">So geht’s</p>
-    <ol>
-      <li><strong>Aufnehmen:</strong> Eine Person spricht ein Wort ins Handy.</li>
-      <li><strong>Rückwärts hören:</strong> Die App spielt es rückwärts ab.</li>
-      <li><strong>Nachsprechen:</strong> Du oder jemand anderes spricht genau diesen Rückwärts-Klang nach.</li>
-      <li><strong>Umdrehen:</strong> Die App dreht die Nachahmung um. Klingt sie wie das Original, habt ihr gewonnen.</li>
-    </ol>
-    <p class="caption" style="margin-top:16px">Alle Aufnahmen bleiben auf deinem Gerät. Nichts wird hochgeladen.</p>
-  </section>
 </main>
+
+<dialog class="info" id="info">
+  <div class="info-head">
+    <div>
+      <p class="eyebrow accent">So geht’s</p>
+      <p class="h3">Rückwärts sprechen</p>
+    </div>
+    <button class="icon-btn" id="info-close" aria-label="Schließen">×</button>
+  </div>
+  <ol>
+    <li><strong>Aufnehmen:</strong> Eine Person spricht ein Wort ins Handy.</li>
+    <li><strong>Rückwärts hören:</strong> Die App spielt es rückwärts ab.</li>
+    <li><strong>Nachsprechen:</strong> Du oder jemand anderes spricht genau diesen Rückwärts-Klang nach.</li>
+    <li><strong>Umdrehen:</strong> Die App dreht die Nachahmung um. Klingt sie wie das Original, habt ihr gewonnen.</li>
+  </ol>
+  <p class="note">Tipp: Kurze Wörter mit vielen Vokalen klappen am besten. Alle Aufnahmen bleiben auf deinem Gerät, nichts wird hochgeladen.</p>
+  <button class="btn btn-primary" id="info-ok">Los geht’s</button>
+</dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -333,12 +389,14 @@
 
   // ---------- Icons ----------
   const ICONS = {
-    mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
-    play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
-    reverse: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 6.2v11.6a.8.8 0 0 1-1.25.66L2.6 13.3a1.6 1.6 0 0 1 0-2.6l7.15-5.16A.8.8 0 0 1 11 6.2z"/><path d="M21 6.2v11.6a.8.8 0 0 1-1.25.66L12.6 13.3a1.6 1.6 0 0 1 0-2.6l7.15-5.16A.8.8 0 0 1 21 6.2z"/></svg>',
-    stop: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>',
-    next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
-    restart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>'
+    mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3.5"/></svg>',
+    rec: '<svg class="ic-rec" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="currentColor"/></svg>',
+    play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.5 4.8v14.4a1.2 1.2 0 0 0 1.8 1l11.4-7.2a1.2 1.2 0 0 0 0-2L9.3 3.8a1.2 1.2 0 0 0-1.8 1z"/></svg>',
+    reverse: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.5 5.8v12.4a1 1 0 0 1-1.6.8L2.3 13.3a1.6 1.6 0 0 1 0-2.6l7.6-5.7a1 1 0 0 1 1.6.8z"/><path d="M22 5.8v12.4a1 1 0 0 1-1.6.8l-7.6-5.7a1.6 1.6 0 0 1 0-2.6l7.6-5.7a1 1 0 0 1 1.6.8z"/></svg>',
+    stop: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5.5" y="5.5" width="13" height="13" rx="2.5"/></svg>',
+    next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="M13 5.5l6.5 6.5-6.5 6.5"/></svg>',
+    restart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3.5v5.5h5.5"/></svg>',
+    turtle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
   };
 
   function setBtn(btn, icon, label) {
@@ -346,28 +404,21 @@
     btn.querySelector('.label').textContent = label;
   }
   function setVariant(btn, variant) {
-    btn.classList.remove('btn-primary', 'btn-outline', 'btn-soft');
+    btn.classList.remove('btn-primary', 'btn-outline', 'btn-soft', 'btn-rec');
     btn.classList.add('btn-' + variant);
   }
-  // Statische Buttons mit Icon versehen
   document.querySelectorAll('.btn[data-icon]').forEach((b) => {
     b.dataset.label = b.textContent.trim();
     setBtn(b, b.dataset.icon, b.dataset.label);
   });
+  setBtn($('slow'), 'turtle', 'Langsam');
 
   // ---------- State ----------
-  const state = {
-    step: 1,
-    original: null,      // AudioBuffer
-    originalRev: null,
-    imitation: null,
-    result: null,        // imitation reversed
-    rate: 1
-  };
+  const state = { step: 1, original: null, originalRev: null, imitation: null, result: null, rate: 1 };
 
   // ---------- Toast ----------
   let toastTimer = 0;
-  function toast(msg, ms = 3200) {
+  function toast(msg, ms = 3000) {
     const t = $('toast');
     t.textContent = msg;
     t.classList.add('show');
@@ -412,9 +463,7 @@
   // Mono, Stille an den Rändern abschneiden, normalisieren, Ein-/Ausblenden
   function processBuffer(buf) {
     const c = getCtx();
-    const sr = buf.sampleRate;
-    const n = buf.length;
-    const chs = buf.numberOfChannels;
+    const sr = buf.sampleRate, n = buf.length, chs = buf.numberOfChannels;
     const mono = new Float32Array(n);
     for (let ch = 0; ch < chs; ch++) {
       const d = buf.getChannelData(ch);
@@ -460,28 +509,49 @@
   function reverseBuffer(buf) {
     const out = getCtx().createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
     for (let ch = 0; ch < buf.numberOfChannels; ch++) {
-      const src = buf.getChannelData(ch);
-      const dst = out.getChannelData(ch);
+      const src = buf.getChannelData(ch), dst = out.getChannelData(ch);
       for (let i = 0, j = src.length - 1; i < src.length; i++, j--) dst[i] = src[j];
     }
     return out;
   }
 
-  // ---------- Wellenform ----------
+  // ---------- Zeichnen ----------
   let colors = {};
   function readColors() {
     const cs = getComputedStyle(document.documentElement);
-    colors = {
-      wave: cs.getPropertyValue('--wave').trim(),
-      active: cs.getPropertyValue('--wave-active').trim(),
-      border: cs.getPropertyValue('--border').trim()
-    };
+    const v = (n) => cs.getPropertyValue(n).trim();
+    colors = { wave: v('--wave'), active: v('--wave-active'), border: v('--border'), rec: v('--rec') };
   }
   readColors();
 
+  const BAR = 5, GAP = 4, PAD = 16, TOP = 34; // CSS-Pixel
+
+  function sizeCanvas(cv) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const w = Math.round(cv.clientWidth * dpr), h = Math.round(cv.clientHeight * dpr);
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    return dpr;
+  }
+  function geom(cv) {
+    const dpr = sizeCanvas(cv);
+    const W = cv.width, H = cv.height;
+    const barW = BAR * dpr, gap = GAP * dpr, pad = PAD * dpr;
+    const bars = Math.max(8, Math.floor((W - pad * 2 + gap) / (barW + gap)));
+    const x0 = (W - (bars * (barW + gap) - gap)) / 2;
+    const top = TOP * dpr, bottom = 14 * dpr;
+    const mid = top + (H - top - bottom) / 2;
+    const maxH = H - top - bottom;
+    return { dpr, W, H, barW, gap, bars, x0, mid, maxH };
+  }
+  function bar(g, x, y, w, h) {
+    g.beginPath();
+    if (g.roundRect) g.roundRect(x, y, w, h, w / 2); else g.rect(x, y, w, h);
+    g.fill();
+  }
+
   const peakCache = new WeakMap();
   function peaks(buffer, bars) {
-    let cache = peakCache.get(buffer);
+    const cache = peakCache.get(buffer);
     if (cache && cache.bars === bars) return cache.data;
     const d = buffer.getChannelData(0);
     const step = d.length / bars;
@@ -491,71 +561,66 @@
       const s = Math.floor(b * step), e = Math.min(d.length, Math.floor((b + 1) * step));
       let p = 0;
       for (let i = s; i < e; i++) { const a = Math.abs(d[i]); if (a > p) p = a; }
-      data[b] = p;
-      if (p > max) max = p;
+      data[b] = p; if (p > max) max = p;
     }
     if (max > 0) for (let b = 0; b < bars; b++) data[b] /= max;
     peakCache.set(buffer, { bars, data });
     return data;
   }
 
-  function sizeCanvas(cv) {
-    const dpr = Math.min(window.devicePixelRatio || 1, 3);
-    const w = Math.round(cv.clientWidth * dpr), h = Math.round(cv.clientHeight * dpr);
-    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
-    return dpr;
-  }
-
   function drawWave(cv, buffer, progress = 0) {
     if (!cv || !cv.clientWidth) return;
-    const dpr = sizeCanvas(cv);
+    const G = geom(cv);
     const g = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
-    g.clearRect(0, 0, W, H);
-    const barW = 3 * dpr, gap = 3 * dpr;
-    const pad = 16 * dpr;
-    const bars = Math.max(8, Math.floor((W - pad * 2 + gap) / (barW + gap)));
-    const mid = H / 2 + 6 * dpr;
-    const maxH = H - 44 * dpr;
+    g.clearRect(0, 0, G.W, G.H);
     if (!buffer) {
-      g.fillStyle = colors.border;
-      g.globalAlpha = 0.5;
-      for (let b = 0; b < bars; b++) {
-        const x = pad + b * (barW + gap);
-        g.fillRect(x, mid - dpr, barW, 2 * dpr);
-      }
+      g.fillStyle = colors.border; g.globalAlpha = 0.6;
+      for (let b = 0; b < G.bars; b++) bar(g, G.x0 + b * (G.barW + G.gap), G.mid - G.barW / 2, G.barW, G.barW);
       g.globalAlpha = 1;
       return;
     }
-    const p = peaks(buffer, bars);
-    const cut = progress * bars;
-    for (let b = 0; b < bars; b++) {
-      const x = pad + b * (barW + gap);
-      const h = Math.max(2 * dpr, Math.pow(p[b], 0.8) * maxH);
+    const p = peaks(buffer, G.bars);
+    const cut = progress * G.bars;
+    for (let b = 0; b < G.bars; b++) {
+      const h = Math.max(G.barW, Math.pow(p[b], 0.75) * G.maxH);
       g.fillStyle = b < cut ? colors.active : colors.wave;
-      roundRect(g, x, mid - h / 2, barW, h, barW / 2);
+      bar(g, G.x0 + b * (G.barW + G.gap), G.mid - h / 2, G.barW, h);
     }
   }
-  function roundRect(g, x, y, w, h, r) {
-    g.beginPath();
-    if (g.roundRect) g.roundRect(x, y, w, h, r);
-    else g.rect(x, y, w, h);
-    g.fill();
+
+  // Live-Pegel: rollende Balken, neuester rechts
+  function drawLive(cv, hist) {
+    const G = geom(cv);
+    const g = cv.getContext('2d');
+    g.clearRect(0, 0, G.W, G.H);
+    g.fillStyle = colors.rec;
+    const n = G.bars;
+    for (let b = 0; b < n; b++) {
+      const lv = hist[hist.length - n + b];
+      const x = G.x0 + b * (G.barW + G.gap);
+      if (lv === undefined) {
+        g.globalAlpha = 0.35;
+        bar(g, x, G.mid - G.barW / 2, G.barW, G.barW);
+        g.globalAlpha = 1;
+        continue;
+      }
+      const h = Math.max(G.barW, lv * G.maxH);
+      bar(g, x, G.mid - h / 2, G.barW, h);
+    }
   }
 
-  // Was jede Wellenform im Ruhezustand zeigt
   const waves = {
-    1: { cv: $('wave1'), label: $('wave1-label'), idle: () => state.original ? [state.original, 'Original'] : [null, ''] },
-    2: { cv: $('wave2'), label: $('wave2-label'), idle: () => state.imitation ? [state.imitation, 'Deine Aufnahme'] : [state.originalRev, 'Vorlage rückwärts'] },
-    3: { cv: $('wave3'), label: $('wave3-label'), idle: () => [state.result, 'Ergebnis'] }
+    1: { box: $('box1'), cv: $('wave1'), label: $('wave1-label'), idle: () => state.original ? [state.original, 'Original'] : [null, ''] },
+    2: { box: $('box2'), cv: $('wave2'), label: $('wave2-label'), idle: () => state.imitation ? [state.imitation, 'Deine Aufnahme'] : [state.originalRev, 'Vorlage rückwärts'] },
+    3: { box: $('box3'), cv: $('wave3'), label: $('wave3-label'), idle: () => [state.result, 'Ergebnis'] }
   };
   function drawIdle(step) {
     const w = waves[step];
+    if (w.box.classList.contains('is-live')) return;
     const [buf, label] = w.idle();
     w.label.textContent = label;
     drawWave(w.cv, buf, 0);
   }
-  function drawAllIdle() { [1, 2, 3].forEach(drawIdle); }
 
   // ---------- Wiedergabe ----------
   const play = { src: null, btn: null, raf: 0, step: 0 };
@@ -568,8 +633,7 @@
       try { play.src.disconnect(); } catch (e) {}
     }
     cancelAnimationFrame(play.raf);
-    play.src = null;
-    play.btn = null;
+    play.src = null; play.btn = null;
     if (btn) setBtn(btn, btn.dataset.icon, btn.dataset.label);
     if (play.step) drawIdle(play.step);
     play.step = 0;
@@ -579,7 +643,7 @@
     if (!buffer) return;
     const same = play.btn === btn;
     stopPlayback();
-    if (same) return; // zweiter Tipp = Stopp
+    if (same) return;
     const c = getCtx();
     const src = c.createBufferSource();
     src.buffer = buffer;
@@ -603,12 +667,11 @@
   }
 
   // ---------- Aufnahme ----------
-  const rec = { mr: null, stream: null, timer: 0, t0: 0, target: null, btn: null, busy: false };
+  const rec = { mr: null, timer: 0, t0: 0, busy: false, meter: null };
 
   function pickMime() {
     if (!window.MediaRecorder) return null;
     const list = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/aac'];
-    // Safari kann mp4 zuverlässig dekodieren, Chrome/Firefox webm/ogg.
     const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
     const ordered = isSafari ? list : list.slice(1).concat(['audio/mp4']);
     for (const m of ordered) {
@@ -617,14 +680,49 @@
     return '';
   }
 
-  function recLabel(target, has) {
-    if (target === 'original') return has ? 'Neu aufnehmen' : 'Aufnahme starten';
-    return has ? 'Neu nachsprechen' : 'Nachsprechen starten';
-  }
+  const fmt = (sec) => '0:' + String(Math.floor(sec)).padStart(2, '0');
 
-  function fmt(sec) {
-    const s = Math.floor(sec);
-    return '0:' + String(s).padStart(2, '0');
+  // Pegelanzeige über AnalyserNode
+  function startMeter(stream, step) {
+    const w = waves[step];
+    const c = getCtx();
+    let srcNode, an;
+    try {
+      srcNode = c.createMediaStreamSource(stream);
+      an = c.createAnalyser();
+      an.fftSize = 1024;
+      an.smoothingTimeConstant = 0;
+      srcNode.connect(an);
+    } catch (e) { return null; }
+    const buf = new Uint8Array(an.fftSize);
+    const hist = [];
+    let smooth = 0, last = 0, raf = 0;
+    w.box.classList.add('is-live');
+    w.label.innerHTML = '<span class="live-dot"></span><span>Aufnahme</span>';
+    const empty = w.box.querySelector('.wave-empty');
+    if (empty) empty.hidden = true;
+    const loop = (t) => {
+      an.getByteTimeDomainData(buf);
+      let s = 0;
+      for (let i = 0; i < buf.length; i++) { const v = (buf[i] - 128) / 128; s += v * v; }
+      const rms = Math.sqrt(s / buf.length);
+      const lv = Math.min(1, Math.pow(rms * 5, 0.7));
+      smooth = lv > smooth ? lv : smooth * 0.85 + lv * 0.15;
+      if (t - last > 45) { hist.push(smooth); if (hist.length > 400) hist.shift(); last = t; }
+      w.box.style.setProperty('--lvl', smooth.toFixed(3));
+      drawLive(w.cv, hist);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return {
+      stop() {
+        cancelAnimationFrame(raf);
+        try { srcNode.disconnect(); } catch (e) {}
+        w.box.classList.remove('is-live');
+        w.box.style.removeProperty('--lvl');
+        w.label.textContent = '';
+      }
+    };
   }
 
   async function startRecording(target, btn) {
@@ -648,13 +746,9 @@
       });
     } catch (e) {
       rec.busy = false;
-      if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')) {
-        toast('Kein Mikrofonzugriff. Bitte in den Browser-Einstellungen erlauben.', 4500);
-      } else if (e && e.name === 'NotFoundError') {
-        toast('Kein Mikrofon gefunden.');
-      } else {
-        toast('Mikrofon konnte nicht gestartet werden.');
-      }
+      if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')) toast('Kein Mikrofonzugriff. Bitte in den Browser-Einstellungen erlauben.', 4500);
+      else if (e && e.name === 'NotFoundError') toast('Kein Mikrofon gefunden.');
+      else toast('Mikrofon konnte nicht gestartet werden.');
       return;
     }
     let mr;
@@ -671,20 +765,18 @@
     const chunks = [];
     mr.ondataavailable = (ev) => { if (ev.data && ev.data.size) chunks.push(ev.data); };
     mr.onstop = async () => {
+      if (rec.meter) { rec.meter.stop(); rec.meter = null; }
       // Mikrofon freigeben, damit iOS wieder über den Lautsprecher abspielt
       stream.getTracks().forEach((t) => t.stop());
       clearInterval(rec.timer);
       rec.mr = null;
-      setRecordingUI(btn, target, false);
+      setRecordingUI(btn, false);
       try {
         const blob = new Blob(chunks, { type: mr.mimeType || mime || 'audio/webm' });
         const raw = await decode(await blobToArrayBuffer(blob));
         const buf = processBuffer(raw);
-        if (!buf) {
-          toast('Da war nichts zu hören. Sprich etwas lauter oder näher ans Mikrofon.', 4000);
-        } else {
-          onRecorded(target, buf);
-        }
+        if (!buf) toast('Da war nichts zu hören. Sprich lauter oder näher ans Mikrofon.', 4000);
+        else onRecorded(target, buf);
       } catch (e) {
         console.error(e);
         toast('Die Aufnahme konnte nicht verarbeitet werden.');
@@ -693,10 +785,11 @@
         render();
       }
     };
-    rec.mr = mr; rec.stream = stream; rec.target = target; rec.btn = btn;
+    rec.mr = mr;
     mr.start();
     rec.t0 = performance.now();
-    setRecordingUI(btn, target, true);
+    rec.meter = startMeter(stream, state.step);
+    setRecordingUI(btn, true);
     rec.timer = setInterval(() => {
       const el = (performance.now() - rec.t0) / 1000;
       const t = btn.querySelector('.timer');
@@ -712,22 +805,24 @@
     }
   }
 
-  function setRecordingUI(btn, target, on) {
+  function setRecordingUI(btn, on) {
+    const partner = btn.parentElement.querySelector('.btn:not([data-rec])');
     if (on) {
       btn.classList.add('is-recording');
       btn.innerHTML = '<span class="rec-dot" aria-hidden="true"></span><span class="label">Stopp</span><span class="timer">0:00 / ' + fmt(MAX_SEC) + '</span>';
       btn.setAttribute('aria-label', 'Aufnahme stoppen');
+      if (partner) { partner.dataset.wasHidden = partner.hidden ? '1' : '0'; partner.hidden = true; }
       setInteractive(false, btn);
     } else {
       btn.classList.remove('is-recording');
       btn.removeAttribute('aria-label');
+      if (partner && partner.dataset.wasHidden) { partner.hidden = partner.dataset.wasHidden === '1'; delete partner.dataset.wasHidden; }
       setInteractive(true);
     }
   }
 
-  // Während der Aufnahme alles außer dem Stopp-Knopf sperren
   function setInteractive(on, except) {
-    document.querySelectorAll('.btn, .step-tab, .chip').forEach((el) => {
+    document.querySelectorAll('.btn, .step-tab, .icon-btn').forEach((el) => {
       if (el === except) return;
       if (on) { if (el.dataset.lock === '1') { el.disabled = false; delete el.dataset.lock; } }
       else if (!el.disabled) { el.disabled = true; el.dataset.lock = '1'; }
@@ -740,13 +835,11 @@
       state.originalRev = reverseBuffer(buf);
       state.imitation = null;
       state.result = null;
-      render();
-      toast('Aufgenommen. Hör es dir jetzt rückwärts an.');
+      toast('Aufgenommen. Hör es dir rückwärts an.');
     } else {
       state.imitation = buf;
       state.result = reverseBuffer(buf);
-      render();
-      toast('Geschafft. Weiter zum Ergebnis.');
+      toast('Geschafft. Jetzt das Ergebnis anhören.');
     }
   }
 
@@ -755,11 +848,15 @@
     stopPlayback();
     state.step = step;
     render();
-    window.scrollTo({ top: document.querySelector('.steps').offsetTop - 16, behavior: 'smooth' });
+  }
+
+  function renderRec(btn, has, idleLabel) {
+    if (btn.classList.contains('is-recording')) return;
+    if (has) { setVariant(btn, 'outline'); setBtn(btn, 'rec', 'Neu'); btn.classList.remove('btn-lg'); }
+    else { setVariant(btn, 'rec'); setBtn(btn, 'mic', idleLabel); btn.classList.add('btn-lg'); }
   }
 
   function render() {
-    // Tabs
     document.querySelectorAll('.step-tab').forEach((t) => {
       const s = +t.dataset.step;
       const enabled = s === 1 || (s === 2 && state.original) || (s === 3 && state.result);
@@ -769,43 +866,18 @@
     });
     document.querySelectorAll('.panel').forEach((p) => { p.hidden = +p.dataset.panel !== state.step; });
 
-    // Schritt 1
     const has1 = !!state.original;
-    const rec1 = $('rec1');
-    if (!rec1.classList.contains('is-recording')) setBtn(rec1, 'mic', recLabel('original', has1));
-    setVariant(rec1, has1 ? 'outline' : 'primary');
-    rec1.classList.toggle('btn-lg', !has1);
+    renderRec($('rec1'), has1, 'Aufnehmen');
     $('row1').hidden = !has1;
-    $('next1').hidden = !has1;
+    if (!$('rec1').classList.contains('is-recording')) $('next1').hidden = !has1;
     $('wave1-empty').hidden = has1;
 
-    // Schritt 2
     const has2 = !!state.imitation;
-    const rec2 = $('rec2');
-    if (!rec2.classList.contains('is-recording')) setBtn(rec2, 'mic', recLabel('imitation', has2));
-    setVariant(rec2, has2 ? 'outline' : 'primary');
-    rec2.classList.toggle('btn-lg', !has2);
-    $('play2-imit').hidden = !has2;
-    const next2 = $('next2') || createNext2();
-    next2.hidden = !has2;
+    renderRec($('rec2'), has2, 'Nachsprechen');
+    if (!$('rec2').classList.contains('is-recording')) $('play2-imit').hidden = !has2;
+    $('next2').hidden = !has2;
 
-    if (play.step !== state.step) drawIdle(state.step);
-  }
-
-  function createNext2() {
-    const b = document.createElement('button');
-    b.id = 'next2';
-    b.className = 'btn btn-primary btn-lg';
-    b.dataset.icon = 'next';
-    b.dataset.label = 'Ergebnis anhören';
-    setBtn(b, 'next', b.dataset.label);
-    b.addEventListener('click', () => {
-      goto(3);
-      // kurze Pause, damit der Wechsel sichtbar ist
-      setTimeout(() => playBuffer(state.result, $('play3-result'), 3, 'Ergebnis'), 250);
-    });
-    document.querySelector('[data-panel="2"] .actions').appendChild(b);
-    return b;
+    if (play.step !== state.step) requestAnimationFrame(() => drawIdle(state.step));
   }
 
   // ---------- Events ----------
@@ -822,14 +894,16 @@
   $('play1-rev').addEventListener('click', (e) => playBuffer(state.originalRev, e.currentTarget, 1, 'Rückwärts'));
   $('next1').addEventListener('click', () => goto(2));
 
-  $('play2-ref').addEventListener('click', (e) => playBuffer(state.originalRev, e.currentTarget, 2, 'Vorlage rückwärts', state.rate));
+  $('play2-ref').addEventListener('click', (e) => playBuffer(state.originalRev, e.currentTarget, 2, state.rate < 1 ? 'Vorlage langsam' : 'Vorlage rückwärts', state.rate));
   $('play2-imit').addEventListener('click', (e) => playBuffer(state.imitation, e.currentTarget, 2, 'Deine Aufnahme'));
-  document.querySelectorAll('#speed .chip').forEach((c) => {
-    c.addEventListener('click', () => {
-      state.rate = parseFloat(c.dataset.rate);
-      document.querySelectorAll('#speed .chip').forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
-      if (play.btn === $('play2-ref')) play.src.playbackRate.value = state.rate;
-    });
+  $('slow').addEventListener('click', (e) => {
+    state.rate = state.rate < 1 ? 1 : 0.75;
+    e.currentTarget.setAttribute('aria-pressed', String(state.rate < 1));
+    if (play.btn === $('play2-ref') && play.src) play.src.playbackRate.value = state.rate;
+  });
+  $('next2').addEventListener('click', () => {
+    goto(3);
+    setTimeout(() => playBuffer(state.result, $('play3-result'), 3, 'Ergebnis'), 200);
   });
 
   $('play3-result').addEventListener('click', (e) => playBuffer(state.result, e.currentTarget, 3, 'Ergebnis'));
@@ -842,6 +916,15 @@
   });
 
   document.querySelectorAll('.step-tab').forEach((t) => t.addEventListener('click', () => goto(+t.dataset.step)));
+
+  // Anleitung
+  const dlg = $('info');
+  const openInfo = () => { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); };
+  const closeInfo = () => { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); };
+  $('info-btn').addEventListener('click', openInfo);
+  $('info-close').addEventListener('click', closeInfo);
+  $('info-ok').addEventListener('click', closeInfo);
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) closeInfo(); });
 
   let resizeT = 0;
   window.addEventListener('resize', () => {
@@ -861,27 +944,17 @@
   // ---------- Unterstützung prüfen ----------
   (function checkSupport() {
     let msg = '';
-    if (!window.isSecureContext) {
-      msg = 'Das Mikrofon funktioniert nur über eine sichere Verbindung (https). Öffne die App über ihre https-Adresse.';
-    } else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      msg = 'Dein Browser erlaubt hier keinen Mikrofonzugriff. Öffne die Seite direkt in Safari oder Chrome.';
-    } else if (!window.MediaRecorder) {
-      msg = 'Dein Browser unterstützt keine Aufnahmen. Bitte aktualisiere Safari oder Chrome.';
-    }
-    if (msg) {
-      $('unsupported').hidden = false;
-      $('unsupported-text').textContent = msg;
-    }
+    if (!window.isSecureContext) msg = 'Das Mikrofon funktioniert nur über eine sichere Verbindung (https). Öffne die App über ihre https-Adresse.';
+    else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) msg = 'Dein Browser erlaubt hier keinen Mikrofonzugriff. Öffne die Seite direkt in Safari oder Chrome.';
+    else if (!window.MediaRecorder) msg = 'Dein Browser unterstützt keine Aufnahmen. Bitte aktualisiere Safari oder Chrome.';
+    if (msg) { $('unsupported').hidden = false; $('unsupported-text').textContent = msg; }
   })();
 
   render();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawIdle(state.step));
 
-  // ---------- Offline-Fähigkeit ----------
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    });
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   }
 })();
 </script>

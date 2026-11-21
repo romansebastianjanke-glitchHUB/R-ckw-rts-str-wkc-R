@@ -25,4 +25,6 @@ Aufs Handy: z. B. über GitHub Pages veröffentlichen (Settings → Pages → Br
 - `manifest.webmanifest`, `sw.js` – Installierbarkeit und Offline-Cache
 - `icon.svg`, `icon-*.png`, `apple-touch-icon.png` – App-Icons
 
-Design: RSJ-Design (Tinte/Limette, Montserrat + Open Sans).
+Design: RSJ-Design (Tinte/Limette, Montserrat + Open Sans). Bewusste Ausnahme: Rot (#D92D3A) nur für Aufnahme und Live-Pegel.
+
+Layout: Jeder Schritt passt ohne Scrollen auf den Bildschirm (getestet von 320×568 bis 430×932). Die Anleitung liegt hinter dem ?-Knopf.
